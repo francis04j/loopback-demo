@@ -13,10 +13,10 @@ valid_branch_regex="^master$"
 
 message="\n\nThere is something wrong with your branch name.\nBranch names in this project must adhere to this contract:\n${bold}${YLW}$valid_branch_regex ${normal}${NC} \n\n${RED}Your commit will be rejected.${NC} \nYou should rename your branch to a valid name and try again.\n\n"
 
-if [[ ! $local_branch =~ $valid_branch_regex ]]
-then
-    echo "$message"
-    exit 1
-fi
+# if [[ ! $local_branch =~ $valid_branch_regex ]]
+# then
+#     echo "$message"
+#     exit 1
+# fi
 
 exit 0

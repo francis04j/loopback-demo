@@ -34,7 +34,7 @@ function prompter(cz, commit) {
         type: 'list',
         name: 'type',
         message: "Select the type of change that you're committing:",
-        choices: ['fix', 'feat', 'chore', 'break'],
+        choices: ['fix', 'feat', 'chore', 'break', 'francis'],
       },
       {
         type: 'input',

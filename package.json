@@ -74,7 +74,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "sh scripts/validate-branch-name.sh"
+      "pre-commit": "sh scripts/validate-branch-name.sh",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
     }
   },
   "config": {

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: deploytest
+  name: deploytest
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: deploytest
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: deploytest
+    spec:
+      containers:
+      - image: debian
+        name: deploytest
+        env:
+        - name: MESSAGE
+          value: "Hello"
+        - name: APP_COLOR
+          valueFrom:
+            configMapKeyRef:
+              name: config-map-test
+              key: APP_COLOR
+        envFrom:
+        - configMapRef:
+            name: config-map-test
+        command: ["/bin/echo"]
+        args: ["$(MESSAGE)"]
+      - image: nginx
+        name: nginx
+        resources:
+          requests:
+            cpu: 0.5
+            memory: 1M
+          limits:
+            cpu: 1
+            memory: 2M
+status: {}

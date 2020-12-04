@@ -1,28 +1,19 @@
-# Check out https://hub.docker.com/_/node to select a new base image
-FROM node:10-slim
+FROM node:14-alpine
 
-# Set to a non-root built-in user `node`
-USER node
+# better to do this in docker-compose file
+# ENV MONGO_DB_USERNAME=admin \
+#    MONGO_DB_PWD=password
 
-# Create app directory (with user `node`)
-RUN mkdir -p /home/node/app
+RUN mkdir -p /home/app
 
-WORKDIR /home/node/app
+COPY ./app /home/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY --chown=node package*.json ./
+# set default dir so that next commands executes in /home/app dir
+WORKDIR /home/app
 
+# will execute npm install in /home/app because of WORKDIR
 RUN npm install
 
-# Bundle app source code
-COPY --chown=node . .
+# no need for /home/app/server.js because of WORKDIR
+CMD ["node", "server.js"]
 
-RUN npm run build
-
-# Bind to all network interfaces so that it can be mapped to the host OS
-ENV HOST=0.0.0.0 PORT=3000
-
-EXPOSE ${PORT}
-CMD [ "node", "." ]

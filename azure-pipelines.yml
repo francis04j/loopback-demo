@@ -1,39 +1,19 @@
-# Docker
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
 
 trigger:
 - master
 
-resources:
-- repo: self
+pool:
+  vmImage: 'ubuntu-latest'
 
-variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '48efe325-c05c-4bff-8cf1-de0447816e32'
-  imageRepository: 'kubetutorial'
-  containerRegistry: 'franciskubetutorial.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
-  
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+- script: npm install
+  displayName: 'Install'
+- script: npm test
+  displayName: 'Test'
 
-stages:
-- stage: Build
-  displayName: Build and push stage
-  jobs:  
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)

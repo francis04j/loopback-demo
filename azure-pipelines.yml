@@ -13,11 +13,10 @@ steps:
 - script: |
     echo Hello, world!
     pwd
+    npm install
   displayName: 'Run a one-line script'
 - script: |
-    cd s
-    npm install
-    npm test
+    pwd
   displayName: 'Install'
 
 

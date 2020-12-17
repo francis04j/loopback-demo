@@ -5,26 +5,29 @@ let MongoClient = require('mongodb').MongoClient;
 let bodyParser = require('body-parser');
 let app = express();
 
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  }),
+);
 app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, "index.html"));
-  });
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.get('/profile-picture', function (req, res) {
-  let img = fs.readFileSync(path.join(__dirname, "images/profile-1.jpg"));
-  res.writeHead(200, {'Content-Type': 'image/jpg' });
+  let img = fs.readFileSync(path.join(__dirname, 'images/profile-1.jpg'));
+  res.writeHead(200, {'Content-Type': 'image/jpg'});
   res.end(img, 'binary');
 });
 
 // use when starting application locally
-let mongoUrlLocal = "mongodb://admin:password@localhost:27017";
+// mongoUrl = "mongodb://admin:password@localhost:27017";
 
 // use when starting application as docker container
-let mongoUrlDocker = "mongodb://admin:password@mongodb";
+// let mongoUrl = `mongodb://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PWD}@mongodb`;
+let mongoUrl = 'mongodb://admin:password@mongodb';
 
 app.post('/update-profile', function (req, res) {
   let userObj = req.body;
@@ -32,50 +35,60 @@ app.post('/update-profile', function (req, res) {
   let success = false;
   var mongoClientCallback = function (err, client) {
     if (err) throw err;
-    
+
     let db = client.db('user-account');
     userObj['userid'] = 1;
-    console.log('Succesfully connected to user account db')
-    let myquery = { userid: 1 };
-    let newvalues = { $set: userObj };
+    console.log('Succesfully connected to user account db');
+    let myquery = {userid: 1};
+    let newvalues = {$set: userObj};
     let updateSucess = false;
-    
-    var callbackFn = function(err, res) {
-      if (err){ 
+
+    var callbackFn = function (err, res) {
+      if (err) {
         throw err;
-      }else{
+      } else {
         updateSucess = true;
       }
-      console.log('Succesfully updated or inserted')
+      console.log('Succesfully updated or inserted');
       // client.close();
-    }
-    db.collection("users").updateOne(myquery, newvalues, {upsert: true}, callbackFn(err, res));   
-    success = updateSucess; 
-  }; 
-  MongoClient.connect(mongoUrlLocal, function (err, client) {
+    };
+    db.collection('users').updateOne(
+      myquery,
+      newvalues,
+      {upsert: true},
+      callbackFn(err, res),
+    );
+    success = updateSucess;
+  };
+  MongoClient.connect(mongoUrl, function (err, client) {
     if (err) throw err;
-    
+
     let db = client.db('user-account');
     userObj['userid'] = 1;
-    console.log('Succesfully connected to user account db')
-    let myquery = { userid: 1 };
-    let newvalues = { $set: userObj };
+    console.log('Succesfully connected to user account db');
+    let myquery = {userid: 1};
+    let newvalues = {$set: userObj};
     let updateSucess = false;
-    
-    var callbackFn = function(err, res) {
-      if (err){ 
+
+    var callbackFn = function (err, res) {
+      if (err) {
         throw err;
-      }else{
+      } else {
         updateSucess = true;
       }
-      console.log('Succesfully updated or inserted')
+      console.log('Succesfully updated or inserted');
       // client.close();
-    }
-    db.collection("users").updateOne(myquery, newvalues, {upsert: true}, callbackFn(err, res));   
-    success = updateSucess; 
+    };
+    db.collection('users').updateOne(
+      myquery,
+      newvalues,
+      {upsert: true},
+      callbackFn(err, res),
+    );
+    success = updateSucess;
     client.close();
   });
-  console.log('SUCESSS', success)
+  console.log('SUCESSS', success);
   // Send response
   res.send(userObj);
 });
@@ -83,14 +96,14 @@ app.post('/update-profile', function (req, res) {
 app.get('/get-profile', function (req, res) {
   let response = {};
   // Connect to the db
-  MongoClient.connect(mongoUrlLocal, function (err, client) {
+  MongoClient.connect(mongoUrl, function (err, client) {
     if (err) throw err;
 
     let db = client.db('user-account');
 
-    let myquery = { userid: 1 };
+    let myquery = {userid: 1};
 
-    db.collection("users").findOne(myquery, function (err, result) {
+    db.collection('users').findOne(myquery, function (err, result) {
       if (err) throw err;
       response = result;
       client.close();
@@ -102,5 +115,5 @@ app.get('/get-profile', function (req, res) {
 });
 
 app.listen(3000, function () {
-  console.log("app listening on port 3000!");
+  console.log('app listening on port 3000!');
 });

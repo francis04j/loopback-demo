@@ -1,9 +1,14 @@
 version: '3'
 services:
-  # my-app:
-  # image: ${docker-registry}/my-app:1.0
-  # ports:
-  # - 3000:3000
+  kube-tutorial:
+    image: kube-tutorial:1.0
+    ports:
+      - 3000:3000
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_DB_PWD=password
+    depends_on:
+      - mongodb
   mongodb:
     image: mongo
     ports:
@@ -21,6 +26,8 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=password
       - ME_CONFIG_MONGODB_SERVER=mongodb
+    depends_on:
+      - mongodb
 volumes:
   mongo-data:
     driver: local

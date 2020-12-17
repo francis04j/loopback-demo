@@ -10,9 +10,14 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
+- script: |
+    echo Hello, world!
+    pwd
+    cd pwd
+    npm install
   displayName: 'Run a one-line script'
-- script: npm install
+- script: |
+    pwd
   displayName: 'Install'
-- script: npm test
-  displayName: 'Test'
+
+
